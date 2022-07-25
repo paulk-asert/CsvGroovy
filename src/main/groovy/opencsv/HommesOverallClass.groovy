@@ -3,7 +3,7 @@ package opencsv
 import com.opencsv.bean.CsvBindByName
 import com.opencsv.bean.CsvToBeanBuilder
 
-def file = new File('D:/projects/CsvGroovy/HommesStageWinners.csv')
+def file = getClass().classLoader.getResource('HommesStageWinners.csv').file as File
 
 class Cyclist {
     @CsvBindByName(column = 'firstname')
@@ -16,10 +16,10 @@ class Cyclist {
     String country
 }
 
-file.withReader {r ->
+file.withReader { r ->
     List<Cyclist> rows = new CsvToBeanBuilder(r).withType(Cyclist).build().parse()
     assert rows.size() == 21
-    assert rows.collect{ it.first + ' ' + it.last }.toSet().size() == 15
+    assert rows.collect { it.first + ' ' + it.last }.toSet().size() == 15
     assert rows*.team.toSet().size() == 10
     assert rows*.country.toSet().size() == 9
 }

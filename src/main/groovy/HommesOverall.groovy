@@ -1,6 +1,8 @@
-def rows = new File('D:/projects/CsvGroovy/HommesStageWinners.csv').readLines().tail()*.split(',')
+def file = getClass().classLoader.getResource('HommesStageWinners.csv').file as File
+//def file = new File('HommesStageWinners.csv')
+def rows = file.readLines().tail()*.split(',')
 int total = rows.size()
-Set names = rows.collect{ it[1] + ' ' + it[2] }
+Set names = rows.collect { it[1] + ' ' + it[2] }
 Set teams = rows*.getAt(3)
 Set countries = rows*.getAt(4)
 String result = "Across $total stages, ${names.size()} riders from " +

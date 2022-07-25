@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 
-def file = new File('D:/projects/CsvGroovy/HommesStageWinners.csv')
+def file = getClass().classLoader.getResource('HommesStageWinners.csv').file as File
 
 @JsonCreator
 record Cyclist(

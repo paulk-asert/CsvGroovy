@@ -2,7 +2,7 @@ package commons
 
 import static org.apache.commons.csv.CSVFormat.RFC4180
 
-def file = new File('D:/projects/CsvGroovy/HommesStageWinners.csv')
+def file = getClass().classLoader.getResource('HommesStageWinners.csv').file as File
 
 file.withReader { r ->
     def rows = RFC4180.builder()

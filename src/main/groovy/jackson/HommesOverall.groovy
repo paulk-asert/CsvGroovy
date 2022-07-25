@@ -3,7 +3,7 @@ package jackson
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 
-def file = new File('D:/projects/CsvGroovy/HommesStageWinners.csv')
+def file = getClass().classLoader.getResource('HommesStageWinners.csv').file as File
 
 def schema = CsvSchema.emptySchema().withHeader()
 def mapper = new CsvMapper().readerForMapOf(String).with(schema)
