@@ -24,3 +24,19 @@ Set countries = rows*.getAt(4)
 String result = "Across $total stages, ${names.size()} riders from " +
         "${teams.size()} teams and ${countries.size()} countries won stages."
 assert result == 'Across 21 stages, 15 riders from 10 teams and 9 countries won stages.'
+
+
+def byValueDesc = { -it.value }
+def bySize = { k, v -> [k, v.size()] }
+def isMultiple = { it.value > 1 }
+def multipleWins = { Closure select -> rows
+    .groupBy(select)
+    .collectEntries(bySize)
+    .findAll(isMultiple)
+    .sort(byValueDesc)
+    .entrySet()
+    .join(', ')
+}
+println 'Multiple wins by country:\n' + multipleWins{ it[4] }
+println 'Multiple wins by rider:\n' + multipleWins{ it[1] + ' ' + it[2] }
+println 'Multiple wins by team:\n' + multipleWins{ it[3] }
