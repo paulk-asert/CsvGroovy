@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id 'com.github.ben-manes.versions' version '0.42.0'
-}
-apply plugin: 'groovy'
+package csveed
 
-repositories {
-    mavenCentral()
-}
+import org.csveed.row.RowInstructionsImpl
+import org.csveed.row.RowReaderImpl
 
-dependencies {
-    implementation 'org.apache.groovy:groovy:4.0.4'
-    implementation 'com.opencsv:opencsv:5.6'
-    implementation 'org.apache.commons:commons-csv:1.9.0'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.3'
-    implementation 'org.csveed:csveed:0.7.3'
-    runtimeOnly 'org.slf4j:slf4j-simple:1.7.36'
+def file = getClass().classLoader.getResource('HommesStageWinners.csv').file as File
+
+def instructions = new RowInstructionsImpl(separator: ',')
+file.withReader { r ->
+    def rows = new RowReaderImpl(r, instructions).readRows()
+    assert rows.size() == 21
+    assert rows.collect { it.firstname + ' ' + it.lastname }.toSet().size() == 15
+    assert rows*.team.toSet().size() == 10
+    assert rows*.country.toSet().size() == 9
 }
