@@ -26,6 +26,7 @@ def data = [
 ]
 
 def file = File.createTempFile('FemmesStage1Podium', '.csv')
+file.deleteOnExit()
 
 file.withWriter { w ->
     new CSVWriter(w).writeAll(data.collect{ it as String[] })

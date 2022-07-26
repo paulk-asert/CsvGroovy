@@ -27,6 +27,7 @@ def data = [
 ]
 
 def file = File.createTempFile('FemmesStage1Podium', '.csv')
+file.deleteOnExit()
 
 def instructions = new RowInstructionsImpl(useHeader: false, separator: ',')
 file.withWriter { w ->

@@ -22,6 +22,7 @@ def data = [
 ]
 
 def file = File.createTempFile('FemmesStage1Podium', '.csv')
+file.deleteOnExit()
 
 file.text = data*.join(',').join(System.lineSeparator())
 

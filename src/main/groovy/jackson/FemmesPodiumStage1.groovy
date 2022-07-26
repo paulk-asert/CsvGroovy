@@ -24,6 +24,7 @@ def data = [['place', 'firstname', 'lastname', 'team'],
             ['3', 'Lotte', 'Kopecky', 'Team SD Worx']]
 
 def file = File.createTempFile('FemmesStage1Podium', '.csv')
+file.deleteOnExit()
 
 file.withWriter { w ->
     new CsvMapper().writeValue(w, data)

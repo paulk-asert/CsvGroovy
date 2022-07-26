@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package commons
+package flatpack
 
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVPrinter
-import static org.apache.commons.csv.CSVFormat.RFC4180
+import net.sf.flatpack.DelimiterParser
+import net.sf.flatpack.writer.DelimiterWriterFactory
+import net.sf.flatpack.writer.WriterOptions
 
 def data = [
         ['place', 'firstname', 'lastname', 'team'],
@@ -29,10 +29,29 @@ def data = [
 def file = File.createTempFile('FemmesStage1Podium', '.csv')
 file.deleteOnExit()
 
+char SEP = ','
+char QT = '"'
+def header = data[0]
+def options = WriterOptions.instance.autoPrintHeader(false)
+def factory = new DelimiterWriterFactory(SEP, QT).addColumnTitles(header)
 file.withWriter { w ->
-    new CSVPrinter(w, CSVFormat.DEFAULT).printRecords(data)
+    def writer = factory.createWriter(w, options)
+    writer.printHeader()
+    (1..<data.size()).each {row ->
+        (0..<header.size()).each { col ->
+            writer.addRecordEntry(header[col], data[row][col])
+        }
+        writer.nextRecord()
+    }
+    writer.flush()
 }
 
+def result = []
 file.withReader {r ->
-    assert RFC4180.parse(r).records*.toList() == data
+    def records = new DelimiterParser(r, SEP, QT, false).parse()
+    result << records.columns
+    while(records.next()) {
+        result << header.collect{ records.getString(it) }
+    }
 }
+assert result == data
