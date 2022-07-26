@@ -34,16 +34,14 @@ char QT = '"'
 def header = data[0]
 def options = WriterOptions.instance.autoPrintHeader(false)
 def factory = new DelimiterWriterFactory(SEP, QT).addColumnTitles(header)
-file.withWriter { w ->
-    def writer = factory.createWriter(w, options)
+factory.createWriter(file.newWriter(), options).withCloseable { writer ->
     writer.printHeader()
-    (1..<data.size()).each {row ->
+    (1..<data.size()).each { row ->
         (0..<header.size()).each { col ->
             writer.addRecordEntry(header[col], data[row][col])
         }
         writer.nextRecord()
     }
-    writer.flush()
 }
 
 def result = []
